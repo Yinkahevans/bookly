@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { notifyNewBooking, updateBookingStatus } from '../controllers/bookings.controller';
-import { requireBookingOwner } from '../middleware/auth.middleware';
+import { notifyNewBooking, updateBookingStatus } from '../controllers/bookings.controller.js';
+import { requireBookingOwner } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
