@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../context/AuthContext';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string;
@@ -12,12 +12,17 @@ interface Stats {
 
 export default function Dashboard() {
   const { session, isAdmin, loading: authLoading } = useAdminAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (authLoading || !session) return;
+    if (authLoading) return;
+    if (!session) {
+      navigate('/login');
+      return;
+    }
 
     fetch(`${BACKEND_URL}/admin/stats`, {
       headers: { Authorization: `Bearer ${session.access_token}` },
@@ -32,7 +37,7 @@ export default function Dashboard() {
       .then(setStats)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [authLoading, session]);
+  }, [authLoading, session, navigate]);
 
   if (authLoading || loading) {
     return (
@@ -45,7 +50,12 @@ export default function Dashboard() {
   if (!session || !isAdmin) {
     return (
       <main className="min-h-screen bg-cream px-6 py-10">
-        <p className="text-slate">You need an admin account to view this page.</p>
+        <p className="text-slate">
+          You need an admin account to view this page.{' '}
+          <Link to="/login" className="font-medium text-orange hover:underline">
+            Log in
+          </Link>
+        </p>
       </main>
     );
   }

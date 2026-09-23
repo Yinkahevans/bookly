@@ -24,7 +24,7 @@ export default function Nav() {
       <nav className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
         <span className="font-display text-xl text-navy">Bookly Admin</span>
 
-        {session && (
+        {session ? (
           <div className="flex items-center gap-5 text-sm">
             {links.map((l) => (
               <NavLink
@@ -42,6 +42,10 @@ export default function Nav() {
               Log out
             </button>
           </div>
+        ) : (
+          <NavLink to="/login" className="text-sm font-medium text-orange hover:underline">
+            Log in
+          </NavLink>
         )}
       </nav>
     </header>
